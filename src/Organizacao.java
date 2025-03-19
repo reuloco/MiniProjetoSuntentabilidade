@@ -1,18 +1,24 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Organizacao {
     private String nome;
-    private List<ProjetoSustentavel> listaProjetos;
-
-    public Organizacao() {
-    }
+    private ArrayList<ProjetoSustentavel> lista_projetos;
 
     public Organizacao(String nome) {
         this.nome = nome;
-        this.listaProjetos = new ArrayList<>();
+        this.lista_projetos = new ArrayList<>();
     }
 
+    public void adicionar_projeto(ProjetoSustentavel projeto) {
+        lista_projetos.add(projeto);
+    }
+
+    public void listar_projetos() {
+        System.out.println("Projetos da organização " + nome + ":");
+        for (ProjetoSustentavel projeto : lista_projetos) {
+            System.out.println("- " + projeto.get_nome() + ": " + projeto.get_descricao());
+        }
+    }
 
     public String get_nome() {
         return nome;
@@ -22,23 +28,7 @@ public class Organizacao {
         this.nome = nome;
     }
 
-    public List<ProjetoSustentavel> getListaProjetos() {
-        return listaProjetos;
-    }
-
-    public void set_lista_projetos(List<ProjetoSustentavel> listaProjetos) {
-        this.listaProjetos = listaProjetos;
-    }
-
-    public void adicionar_projeto(ProjetoSustentavel projeto) {
-        listaProjetos.add(projeto);
-    }
-
-
-
-    public void listar_projetos() {
-        for (ProjetoSustentavel projeto : listaProjetos) {
-            System.out.println(projeto);
-        }
+    public ArrayList<ProjetoSustentavel> get_lista_projetos() {
+        return lista_projetos;
     }
 }
