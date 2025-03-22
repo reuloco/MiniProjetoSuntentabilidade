@@ -6,13 +6,14 @@ public class Main {
 
         // Menu principal
         System.out.println("Bem-vindo ao Sistema de Gestão de Projetos Sustentáveis!");
+
+        // Criar organização
         System.out.println("Escolha o tipo de organização:");
         System.out.println("1 - ONG");
         System.out.println("2 - Empresa");
         int tipo_organizacao = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha
 
-        // Criar organização
         Organizacao organizacao;
         if (tipo_organizacao == 1) {
             System.out.println("Digite o nome da ONG:");
@@ -32,64 +33,135 @@ public class Main {
 
         // Menu de projetos
         while (true) {
-            System.out.println("\nEscolha o tipo de projeto para adicionar:");
-            System.out.println("1 - Projeto de Reflorestamento");
-            System.out.println("2 - Projeto de Reciclagem");
-            System.out.println("3 - Projeto de Energia Renovável");
+            System.out.println("\nEscolha uma opção:");
+            System.out.println("1 - Adicionar Projeto");
+            System.out.println("2 - Adicionar Voluntário a um Projeto");
+            System.out.println("3 - Listar Projetos e Voluntários");
+            System.out.println("4 - Calcular Impacto dos Projetos");
             System.out.println("0 - Sair");
-            int tipo_projeto = scanner.nextInt();
+            int opcao = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
 
-            if (tipo_projeto == 0) {
+            if (opcao == 0) {
                 break; // Sair do loop
             }
 
-            // Capturar dados do projeto
-            System.out.println("Digite o nome do projeto:");
-            String nome_projeto = scanner.nextLine();
-            System.out.println("Digite a descrição do projeto:");
-            String descricao_projeto = scanner.nextLine();
-
-            ProjetoSustentavel projeto;
-            switch (tipo_projeto) {
+            switch (opcao) {
                 case 1:
-                    System.out.println("Digite o número de árvores plantadas:");
-                    int arvores_plantadas = scanner.nextInt();
+                    // Adicionar projeto
+                    System.out.println("Escolha o tipo de projeto:");
+                    System.out.println("1 - Projeto de Reflorestamento");
+                    System.out.println("2 - Projeto de Reciclagem");
+                    System.out.println("3 - Projeto de Energia Renovável");
+                    int tipo_projeto = scanner.nextInt();
                     scanner.nextLine(); // Consumir a quebra de linha
-                    projeto = new ProjetoReflorestamento(nome_projeto, descricao_projeto, arvores_plantadas);
+
+                    System.out.println("Digite o nome do projeto:");
+                    String nome_projeto = scanner.nextLine();
+                    System.out.println("Digite a descrição do projeto:");
+                    String descricao_projeto = scanner.nextLine();
+
+                    ProjetoSustentavel projeto;
+                    switch (tipo_projeto) {
+                        case 1:
+                            System.out.println("Digite o número de árvores plantadas:");
+                            int arvores_plantadas = scanner.nextInt();
+                            scanner.nextLine(); // Consumir a quebra de linha
+                            projeto = new ProjetoReflorestamento(nome_projeto, descricao_projeto, arvores_plantadas);
+                            break;
+                        case 2:
+                            System.out.println("Digite a quantidade de toneladas recicladas:");
+                            double toneladas_recicladas = scanner.nextDouble();
+                            scanner.nextLine(); // Consumir a quebra de linha
+                            projeto = new ProjetoReciclagem(nome_projeto, descricao_projeto, toneladas_recicladas);
+                            break;
+                        case 3:
+                            System.out.println("Digite a quantidade de energia gerada (em MWh):");
+                            double energia_gerada = scanner.nextDouble();
+                            scanner.nextLine(); // Consumir a quebra de linha
+                            projeto = new ProjetoEnergiaRenovavel(nome_projeto, descricao_projeto, energia_gerada);
+                            break;
+                        default:
+                            System.out.println("Opção inválida. Tente novamente.");
+                            continue;
+                    }
+
+                    organizacao.adicionar_projeto(projeto);
+                    System.out.println("Projeto adicionado com sucesso!");
                     break;
+
                 case 2:
-                    System.out.println("Digite a quantidade de toneladas recicladas:");
-                    double toneladas_recicladas = scanner.nextDouble();
+                    // Adicionar voluntário a um projeto
+                    if (organizacao.get_lista_projetos().isEmpty()) {
+                        System.out.println("Nenhum projeto cadastrado. Adicione um projeto primeiro.");
+                        break;
+                    }
+
+                    System.out.println("Escolha o projeto para adicionar o voluntário:");
+                    for (int i = 0; i < organizacao.get_lista_projetos().size(); i++) {
+                        System.out.println((i + 1) + " - " + organizacao.get_lista_projetos().get(i).get_nome());
+                    }
+                    int indice_projeto = scanner.nextInt();
                     scanner.nextLine(); // Consumir a quebra de linha
-                    projeto = new ProjetoReciclagem(nome_projeto, descricao_projeto, toneladas_recicladas);
+
+                    if (indice_projeto < 1 || indice_projeto > organizacao.get_lista_projetos().size()) {
+                        System.out.println("Índice inválido.");
+                        break;
+                    }
+
+                    ProjetoSustentavel projeto_selecionado = organizacao.get_lista_projetos().get(indice_projeto - 1);
+
+                    System.out.println("Digite o nome do voluntário:");
+                    String nome_voluntario = scanner.nextLine();
+                    System.out.println("Digite o e-mail do voluntário:");
+                    String email_voluntario = scanner.nextLine();
+
+                    Voluntario voluntario = new Voluntario(nome_voluntario, email_voluntario);
+                    projeto_selecionado.adicionar_voluntario(voluntario);
+                    System.out.println("Voluntário adicionado com sucesso!");
                     break;
+
                 case 3:
-                    System.out.println("Digite a quantidade de energia gerada (em MWh):");
-                    double energia_gerada = scanner.nextDouble();
-                    scanner.nextLine(); // Consumir a quebra de linha
-                    projeto = new ProjetoEnergiaRenovavel(nome_projeto, descricao_projeto, energia_gerada);
+                    // Listar projetos e voluntários
+                    if (organizacao.get_lista_projetos().isEmpty()) {
+                        System.out.println("Nenhum projeto cadastrado.");
+                        break;
+                    }
+
+                    System.out.println("\nProjetos da organização " + organizacao.get_nome() + ":");
+                    for (ProjetoSustentavel p : organizacao.get_lista_projetos()) {
+                        System.out.println("- " + p.get_nome() + ": " + p.get_descricao());
+                        if (p.get_voluntarios().isEmpty()) {
+                            System.out.println("  Nenhum voluntário cadastrado.");
+                        } else {
+                            System.out.println("  Voluntários:");
+                            for (Voluntario v : p.get_voluntarios()) {
+                                System.out.println("  - " + v.get_nome() + " (" + v.get_email() + ")");
+                            }
+                        }
+                    }
                     break;
+
+                case 4:
+                    // Calcular impacto dos projetos
+                    if (organizacao.get_lista_projetos().isEmpty()) {
+                        System.out.println("Nenhum projeto cadastrado.");
+                        break;
+                    }
+
+                    System.out.println("\nCalculando impactos dos projetos:");
+                    for (ProjetoSustentavel p : organizacao.get_lista_projetos()) {
+                        System.out.println("\nProjeto: " + p.get_nome());
+                        p.calcular_impacto();
+                    }
+                    break;
+
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
-                    continue;
             }
-
-            // Adicionar projeto à organização
-            organizacao.adicionar_projeto(projeto);
-            System.out.println("Projeto adicionado com sucesso!");
         }
 
-        // Exibir projetos e calcular impactos
-        System.out.println("\nProjetos da organização " + organizacao.get_nome() + ":");
-        organizacao.listar_projetos();
-
-        System.out.println("\nCalculando impactos dos projetos:");
-        for (ProjetoSustentavel projeto : organizacao.get_lista_projetos()) {
-            System.out.println("\nProjeto: " + projeto.get_nome());
-            projeto.calcularImpacto();
-        }
-
+        System.out.println("Programa encerrado. Obrigado!");
         scanner.close();
     }
 }

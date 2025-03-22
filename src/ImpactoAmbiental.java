@@ -1,3 +1,3 @@
 public interface ImpactoAmbiental {
-    void calcularImpacto();
+    void calcular_impacto();
 }

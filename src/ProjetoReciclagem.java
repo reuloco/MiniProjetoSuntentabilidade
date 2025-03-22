@@ -15,7 +15,7 @@ public class ProjetoReciclagem extends ProjetoSustentavel {
     }
 
     @Override
-    public void calcularImpacto() {
+    public void calcular_impacto() {
         System.out.println("Impacto: " + toneladas_recicladas + " toneladas recicladas.");
     }
 }

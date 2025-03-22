@@ -15,7 +15,7 @@ public class ProjetoReflorestamento extends ProjetoSustentavel {
     }
 
     @Override
-    public void calcularImpacto() {
+    public void calcular_impacto() {
         System.out.println("Impacto: " + arvores_plantadas + " árvores plantadas.");
     }
 }
